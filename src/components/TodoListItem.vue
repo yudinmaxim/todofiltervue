@@ -1,5 +1,5 @@
 <template>
-  <div class="todo-item">
+  <div class="todo-item"  :id="todo.id" draggable="true"  @dragstart="dragStart" @dragover.stop>
     <div class="todo-name">
       <input
         type="checkbox"
@@ -82,6 +82,11 @@ export default {
     },
     deleteTodoButtonClick() {
       this.$emit("delete", this.todo);
+    },
+
+    dragStart(item) {
+    //  const target = item.target
+      item.dataTransfer.setData('todos_id', JSON.stringify(this.todo))
     }
   }
 };

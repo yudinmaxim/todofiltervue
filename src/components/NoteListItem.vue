@@ -1,5 +1,5 @@
 <template>
-  <div v-show="isShowing" class="note">
+  <div v-show="isShowing" class="note" @dragover.prevent @drop.prevent="drop">
     <note-header
       :note="note"
       @click="headerClick"
@@ -8,7 +8,7 @@
 
     <!--Предел ограничен 5ю единицами на общей странице заметок -->
     <todo-list-item
-      v-for="todo in filteredTodos"
+      v-for="todo in todos"
       :key="todo.id"
       :todo="todo"
       :isEnabled="!inList"
@@ -45,7 +45,6 @@ export default {
     note: Object,
     id: String,
     name: String,
-    todos: Array,
 
     filter: {
       default: {
@@ -58,19 +57,28 @@ export default {
     return {
       LIMIT_FOR_TODOS: 5,
       isShowing: true,
+      todos: [],
     };
   },
 
+  mounted(){
+this.filteredTodos()
+  },
   watch: {
     "filteredTodos.length": function(newValue) {
       this.isShowing = newValue > 0;
     },
+
+    "note.todos": function() {
+      this.filteredTodos()
+    }
   },
 
-  computed: {
+  methods: {
+    ...mapActions(["RemoveNote"]),
     filteredTodos() {
       const todosdid = [];
-      const todos = [];
+      
       if (this.filter.did) {
         todosdid.push(...this.note.todos.filter((todo) => todo.isChecked));
       } else {
@@ -78,20 +86,17 @@ export default {
       }
 
       if (this.filter.name.length > 0) {
-        todos.push(
+        this.todos.push(
           ...todosdid.filter((todo) =>
             todo.name.toLowerCase().includes(this.filter.name.toLowerCase())
           )
         );
       } else {
-        todos.push(...todosdid);
+        this.todos.push(...todosdid);
       }
-      return todos.filter((todo, index) => index < this.LIMIT_FOR_TODOS);
+      this.todos = [...this.todos.filter((todo, index) => index < this.LIMIT_FOR_TODOS)];
     },
-  },
 
-  methods: {
-    ...mapActions(["RemoveNote"]),
     headerClick(note) {
       this.$router.push({ name: "Note", params: { id: note.id } });
     },
@@ -102,6 +107,11 @@ export default {
     buttonAllNoteTasksClick(note) {
       this.headerClick(note);
     },
+
+    drop(item) {
+      const todos = JSON.parse(item.dataTransfer.getData('todos_id'));
+      this.todos.push(todos)
+    }
   },
 };
 </script>
