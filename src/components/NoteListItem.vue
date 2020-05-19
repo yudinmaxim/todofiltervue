@@ -12,6 +12,8 @@
       :key="todo.id"
       :todo="todo"
       :isEnabled="!inList"
+      :parent="note"
+      :dndstart="dndStart"
     />
     <!-- Выводим 6е дело с эффектом прозрачности - намекает, что в заметке есть ещё дела -->
     <button
@@ -113,8 +115,25 @@ export default {
     },
 
     drop(item) {
-      const todos = JSON.parse(item.dataTransfer.getData('todos_id'));
-      this.todos.push(todos)
+      const todoObject = JSON.parse(item.dataTransfer.getData('todos_id'));
+
+      const todo = todoObject.todo;
+      const parent = todoObject.parent;
+
+      this.$emit('dndend', {parent, todo});
+
+      // проверим на совпадение id
+      todo.id = this.todos.length
+      this.todos = [todo, ...this.todos]
+
+      
+    },
+
+    dndStart(todo) {
+      const dragIndex = this.todos.findIndex((item) => item.id === todo.id);
+
+      console.log(dragIndex)
+      //this.todos.splice(dragIndex, 1);
     }
   },
 };

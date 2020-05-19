@@ -42,8 +42,9 @@ export default {
   name: "Todo",
 
   props: {
+    parent: Object,
     todo: Object,
-
+    dndstart: Function,
     isEnabled: { default: true }
   },
 
@@ -85,8 +86,10 @@ export default {
     },
 
     dragStart(item) {
-    //  const target = item.target
-      item.dataTransfer.setData('todos_id', JSON.stringify(this.todo))
+
+      item.dataTransfer.setData('todos_id', JSON.stringify({todo: this.todo, parent: this.parent}))
+
+      
     }
   }
 };

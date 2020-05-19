@@ -28,6 +28,7 @@
         :note="note"
         :inList="true"
         :filter="filter"
+        @dndend="dndend"
       />
     </div>
   </div>
@@ -71,6 +72,15 @@ export default {
     buttonNoteAddClick() {
       this.$router.push({ name: "Note", params: { id: this.notes.length } });
     },
+
+    dndend(args) {
+      // найдёт карточку
+      const note = this.notes.find((note) => note.id === args.parent.id)
+
+      // найдем в ней задачу и удалим
+      const todoIndex = note.todos.findIndex((todo) => todo.id === args.todo.id)
+      note.todos.splice(todoIndex, 1)
+    }
   },
 };
 </script>
