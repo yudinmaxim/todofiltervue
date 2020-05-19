@@ -62,10 +62,13 @@ export default {
   },
 
   mounted(){
-this.filteredTodos()
+    this.filteredTodos()
   },
   watch: {
-    "filteredTodos.length": function(newValue) {
+    filter: function() {
+      this.filteredTodos()
+    },
+    "todos.length": function(newValue) {
       this.isShowing = newValue > 0;
     },
 
@@ -80,20 +83,21 @@ this.filteredTodos()
       const todosdid = [];
       
       if (this.filter.did) {
-        todosdid.push(...this.note.todos.filter((todo) => todo.isChecked));
+        todosdid.push( ...this.note.todos.filter((todo) => todo.isChecked) );
       } else {
-        todosdid.push(...this.note.todos);
+        todosdid.push( ...this.note.todos);
       }
 
       if (this.filter.name.length > 0) {
-        this.todos.push(
-          ...todosdid.filter((todo) =>
+        this.todos = 
+          todosdid.filter((todo) =>
             todo.name.toLowerCase().includes(this.filter.name.toLowerCase())
-          )
+          
         );
       } else {
-        this.todos.push(...todosdid);
+        this.todos = todosdid;
       }
+
       this.todos = [...this.todos.filter((todo, index) => index < this.LIMIT_FOR_TODOS)];
     },
 
