@@ -2,12 +2,13 @@
   <div class="root">
     <h1>Список заметок</h1>
     <div class="notes">
-      <div class="row">
-        <div class="align-left">
+
+      <div class="row col">
+        <div class="mb-10">
           <span>Только выполненные</span>
           <input v-model="filterDid" type="checkbox" />
         </div>
-        <div class="align-right">
+        <div class="mb-10">
           <span>Поиск:</span>
           <input
             v-model="filterString"

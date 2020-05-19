@@ -33,11 +33,8 @@ $color-pompadour: #6f006f;
   width: 100%;
 }
 
-.align-left {
-  align-self: flex-start;
-}
-.align-right {
-  align-self: flex-end;
+.mb-10 {
+  margin-bottom: 10px;
 }
 
 .name {
@@ -61,4 +58,11 @@ input {
   border-color: $border;
   background-color: $background;
   color: $color;
+}
+
+@media screen and (max-width: 600px) {
+  .col {
+    flex-direction: column;
+
+  }
 }
