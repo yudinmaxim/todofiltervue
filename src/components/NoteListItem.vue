@@ -1,11 +1,10 @@
 <template>
-  <div v-show="isShowing" class="note" @dragover.prevent @drop.prevent="drop">
+  <div v-show="isShowing" :class="`note ${dragAddShow ? 'drag' : ''}`" :id="note.id"  @dragover.prevent="dragAddShow=true" @dragenter="dragAddShow=true" @dragleave.stop="dragAddShow=false"  @drop.prevent="drop">
     <note-header
       :note="note"
       @click="headerClick"
       @delete="headerDeleteClick"
     />
-
     <!--Предел ограничен 5ю единицами на общей странице заметок -->
     <todo-list-item
       v-for="todo in todos"
@@ -13,7 +12,6 @@
       :todo="todo"
       :isEnabled="!inList"
       :parent="note"
-      :dndstart="dndStart"
     />
     <!-- Выводим 6е дело с эффектом прозрачности - намекает, что в заметке есть ещё дела -->
     <button
@@ -45,7 +43,6 @@ export default {
     },
 
     note: Object,
-    id: String,
     name: String,
 
     filter: {
@@ -60,6 +57,8 @@ export default {
       LIMIT_FOR_TODOS: 5,
       isShowing: true,
       todos: [],
+
+      dragAddShow: false,
     };
   },
 
@@ -80,7 +79,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["RemoveNote"]),
+    ...mapActions(["RemoveNote", "ChangeNote"]),
     filteredTodos() {
       const todosdid = [];
       
@@ -123,18 +122,16 @@ export default {
       this.$emit('dndend', {parent, todo});
 
       // проверим на совпадение id
-      todo.id = this.todos.length
-      this.todos = [todo, ...this.todos]
+      todo.id = this.note.todos.length
 
-      
+      // создаём предельно полную копию объекта для сохранения его в сторе
+      const newNote = {...this.note};
+      newNote.todos = [todo, ...newNote.todos]
+      this.ChangeNote(newNote);
+ 
+
     },
 
-    dndStart(todo) {
-      const dragIndex = this.todos.findIndex((item) => item.id === todo.id);
-
-      console.log(dragIndex)
-      //this.todos.splice(dragIndex, 1);
-    }
   },
 };
 </script>
@@ -162,4 +159,9 @@ export default {
 .more-todos:hover {
   @include borderColor($color-white, $color-pompadour, $color-white);
 }
+
+.drag {
+  border: 1px solid $color-gray;
+}
+
 </style>

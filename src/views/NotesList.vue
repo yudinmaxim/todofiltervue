@@ -11,7 +11,7 @@
           <span>Поиск:</span>
           <input
             v-model="filterString"
-            class="name filter"
+            class="filter"
             type="text"
             placeholder="Название задачи"
           />
@@ -67,7 +67,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["LoadSaveData"]),
+    ...mapActions(["LoadSaveData", "RemoveNote"]),
 
     buttonNoteAddClick() {
       this.$router.push({ name: "Note", params: { id: this.notes.length } });
@@ -80,6 +80,10 @@ export default {
       // найдем в ней задачу и удалим
       const todoIndex = note.todos.findIndex((todo) => todo.id === args.todo.id)
       note.todos.splice(todoIndex, 1)
+
+      if(note.todos.length == 0) {
+        this.RemoveNote(note.id)
+      }
     }
   },
 };

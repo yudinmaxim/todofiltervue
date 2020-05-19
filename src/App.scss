@@ -46,6 +46,15 @@ $color-pompadour: #6f006f;
   background-color: transparent;
   font-size: 16px;
   margin-left: 5px;
+  width: 100%;
+}
+
+input {
+  border: 0px;
+  outline: none;
+  background-color: transparent;
+  font-size: 16px;
+  margin-left: 5px;
 }
 
 @mixin borderColor($border, $background, $color) {

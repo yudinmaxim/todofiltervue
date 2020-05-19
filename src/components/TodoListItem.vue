@@ -1,5 +1,5 @@
 <template>
-  <div class="todo-item"  :id="todo.id" draggable="true"  @dragstart="dragStart" @dragover.stop>
+  <div class="todo-item"  :id="todo.id" :draggable="!isEnabled"  @dragstart="dragStart" @dragover.stop>
     <div class="todo-name">
       <input
         type="checkbox"
@@ -44,7 +44,6 @@ export default {
   props: {
     parent: Object,
     todo: Object,
-    dndstart: Function,
     isEnabled: { default: true }
   },
 

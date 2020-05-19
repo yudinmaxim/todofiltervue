@@ -191,6 +191,9 @@ export default new Vuex.Store({
     },
     LoadSaveData({ commit }) {
       commit("loadNotes");
+    },
+    SaveData({ commit }) {
+      commit("saveNotes");
     }
   },
   modules: {}
